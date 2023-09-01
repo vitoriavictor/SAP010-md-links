@@ -3,8 +3,6 @@ const path = require("path"); // módulo caminhos
 const axios = require("axios"); //módulo para testar links HTTP
 
 //IMPORTAR ARQUIVO MDLINK//
-
-
 //mdLinks("./src/files/dir-files", true)
 //mdLinks("./src/files/test-markdown.txt", true)
 //mdLinks("./src/files", true)
@@ -17,25 +15,6 @@ mdLinks("./src/files/links-to-check.md", true)
 
 //CONSTRUIR FUNÇÃO PARA MARKDOWN - ler arquivo e extrair link //
 
-/* function readFileMarkdown(filePath) {
-  return fs.readFile(filePath, 'utf-8')
-    .then((content) => {
-      const regex = /\[([^\]]+)\]\((http[s]?:\/\/[^\)]+)\)/g;
-      const links = [];
-      let match = regex.exec(content);
-
-      while (match !== null) {
-        const [, text, href] = match;
-        links.push({ href, text, file: filePath });
-        match = regex.exec(content);
-      }
-      return links;
-    })
-    .catch((error) => {
-      throw new Error(`Erro ao processar o arquivo: ${error.message}`);
-    });
-} */
-
 function readFileMarkdown(content, filePath) {
   const regex = /\[([^\]]+)\]\((http[s]?:\/\/[^\)]+)\)/g;
   const links = [];
@@ -47,36 +26,11 @@ function readFileMarkdown(content, filePath) {
     match = regex.exec(content);
   }
 
-  return links // Retorna os links como um array de objetos
+  return links
 }
 
 
 //CONSTRUIR FUNÇÃO PARA DIRETÓRIO //
-
-/* function readDirectoryMd(directoryPath) {
-  
-  return fs.readdir(directoryPath)
-    .then(files => {
-      //console.log("cai aqui")
-      const filePromises = files.map(async file => {
-        const fullPath = path.join(directoryPath, file);
-        const stats = await fs.stat(fullPath);
-
-        if (stats.isDirectory()) {
-          //console.log("cai aqui")
-          return readDirectoryMd(fullPath);
-        } else if (['.md', '.mkd', '.mdwn', '.mdown', '.mdtxt', '.mdtext', '.markdown', '.text'].includes(path.extname(file))) {
-          const content = await fs.readFile(fullPath, 'utf-8');
-          return { fullPath, content };
-        }
-
-        return [];
-      });
-
-      return Promise.all(filePromises)
-        .then(fileLinks => fileLinks.flat());
-    });
-} */
 
 function readDirectoryMd(directoryPath) {
   return fs.readdir(directoryPath)
@@ -105,7 +59,7 @@ function readDirectoryMd(directoryPath) {
 }
 
 
-// CONSTRUIR FUNÇÃO VALIDAR //
+// CONSTRUIR FUNÇÃO VALIDAR //FAZENDO O TEST, FALTA RODAR. 
 
 function validateUniqueLinkFile(link) {
   return axios.head(link.href)
@@ -145,7 +99,6 @@ function mdLinks(filePath, validate = false) {
       .then(stats => {
         if (stats.isDirectory()) {
           //console.log(stats);
-          // Colocar aqui função para ler arquivos de diretório
           return readDirectoryMd(absolutePath)
             .then((links) => {
                         //console.log(links);
@@ -180,30 +133,6 @@ function mdLinks(filePath, validate = false) {
       });
   });
 }
-
-//função MD LINKS ANTES DE DIRETORIO
-
-/* function mdLinks(filePath) {
-  const absolutePath = path.resolve(filePath);
-
-  return new Promise((resolve, reject) => {
-    fs.stat(absolutePath)
-      .then(stats => {
-        if (stats.isFile()) {
-          return fs.readFile(absolutePath, 'utf-8')
-            //aqui pegar função para ler markdown
-            .then(content => readFileMarkdown(absolutePath))
-            .then(resolve)
-            .catch(reject);
-        } else if (stats.isDirectory()) {
-
-}
-      })
-      .catch(error => {
-        throw new Error(`Erro: ${error.message}`);
-      });
-  });
-} */
 
 module.exports = {
   mdLinks, readFileMarkdown, validateUniqueLinkFile, readDirectoryMd,

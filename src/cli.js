@@ -14,13 +14,15 @@ const options = {
 //redundancia aqui   validateAndStats: process.argv.includes('--validate') && process.argv.includes('--stats')
 //console.log(args);
 
-// Verifique se args contém um caminho de arquivo
+// args verifica se contém um caminho de arquivo
 const filePath = args.find(arg => !arg.startsWith('--'));
 
 if (!filePath) {
   console.error(chalk.red.bold('Erro: Você precisa fornecer o caminho para um arquivo Markdown.'));
-  process.exit(1); // Encerra o script com um código de erro
+  process.exit(1);
 }
+
+//VER COMO INCLUIR AQUI DIRETORIO, ARQUIVOS SEM LINK E FORMATO DIFERENTE
 
 mdLinks(filePath, options)
   .then((result) => {
@@ -37,7 +39,6 @@ mdLinks(filePath, options)
       console.log(chalk.bgGreen(`Working links: ${workingLinks}`));
       console.log(chalk.bgRed(`Broken links: ${brokenLinks}`));
     }else if(options.validate){
-      //fazer apenas --validate
 
       console.log(chalk.green.bold(`* Validate links and content: *\n`));
 
@@ -55,7 +56,6 @@ mdLinks(filePath, options)
       });
 
     } else if(options.stats){
-      //fazer apenas --stats
 
       const totalLinks = result.length;
       const uniqueLinks = new Set(result.map((link) => link.href)).size;
@@ -78,5 +78,3 @@ mdLinks(filePath, options)
     .catch((error) => {
     console.error(error);
   });
-
-  //completar ajustes para marco

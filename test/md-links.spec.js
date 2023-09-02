@@ -7,6 +7,8 @@ const axios = require('axios');
 jest.mock('axios');
 jest.mock('fs').promises;
 
+// NAO FAZER MOCK DO FS, PASSAR DIRETO CAMINHOS DOS ARQUIVOS .MD NO PROJETO
+
 //const mdLinks = require('../src');
 
 
@@ -41,7 +43,7 @@ describe('validateUniqueLinkFile', () => {
       expect(result).toEqual({
         ...validLink,
         status: 200,
-        ok: 'ok'
+        ok: 'Ok | Successful response'
       });
     });
   });
@@ -58,7 +60,7 @@ describe('validateUniqueLinkFile', () => {
       expect(result).toEqual({
         ...invalidLink,
         status: 404,
-        ok: 'fail'
+        ok: 'Fail | Error'
       });
     });
   });

@@ -1,6 +1,6 @@
 //COMO RODAR OS TESTS??
 
-const {  validateUniqueLinkFile } = require('../index.js');
+const {  validateUniqueLinkFile } = require('../src/index.js');
 const fs = require('fs').promises;
 const axios = require('axios');
 

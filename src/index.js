@@ -7,11 +7,11 @@ const axios = require("axios"); //módulo para testar links HTTP
 //mdLinks("./src/files/test-markdown.txt", true)
 //mdLinks("./src/files", true)
 //mdLinks("./src/files/empty-no-links.md")
-mdLinks("./src/files/links-to-check.md", true)
+/* mdLinks("./src/files/links-to-check.md", true)
   .then(links => {
     console.log(links);
   })
-  .catch(console.error);
+  .catch(console.error); */
 
 //CONSTRUIR FUNÇÃO PARA MARKDOWN - ler arquivo e extrair link //
 
@@ -66,12 +66,12 @@ function validateUniqueLinkFile(link) {
     .then(response => ({
       ...link,
       status: response.status,
-      ok: response.status >= 200 && response.status < 400 ? 'ok' : 'fail',
+      ok: response.status >= 200 && response.status < 400 ? 'Ok | Successful response' : 'Fail',
     }))
     .catch(error => ({
       ...link,
-      status: error.response ? error.response.status : 'N/A',
-      ok: 'fail',
+      status: error.response ? error.response.status : 'Error 404 | Not Found',
+      ok: 'Fail | Error',
     }));
 }
 
@@ -115,7 +115,8 @@ function mdLinks(filePath, validate = false) {
             .then((content) => {
               const links = readFileMarkdown(content, absolutePath);
               if (links.length === 0) {
-                resolve("Ops!! Não há links a serem lidos aqui.");
+                reject(new Error("Ops!! Não há links a serem lidos aqui."));
+                //resolve("Ops!! Não há links a serem lidos aqui.");
               } else if (validate) {
                 resolve(validateMarkdownLinks(links));
               } else {
@@ -124,8 +125,8 @@ function mdLinks(filePath, validate = false) {
             })
             .catch(reject);
         } else {
-          resolve("Ops!! O arquivo não é um diretório nem um arquivo markdown.");
-          //reject(new Error('O arquivo não é um diretório nem um arquivo Markdown.'));
+          //resolve("Ops!! O arquivo não é um diretório nem um arquivo markdown.");
+          reject(new Error('O arquivo não é um diretório nem um arquivo Markdown.'));
         }
       })
       .catch(error => {
@@ -135,5 +136,5 @@ function mdLinks(filePath, validate = false) {
 }
 
 module.exports = {
-  mdLinks, readFileMarkdown, validateUniqueLinkFile, readDirectoryMd,
+  mdLinks, readFileMarkdown, validateMarkdownLinks, validateUniqueLinkFile, readDirectoryMd,
 };

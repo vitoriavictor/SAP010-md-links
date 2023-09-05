@@ -14,7 +14,6 @@ const axios = require("axios"); //módulo para testar links HTTP
   .catch(console.error); */
 
 //CONSTRUIR FUNÇÃO PARA MARKDOWN - ler arquivo e extrair link // TESTE 1: OK!
-
 function readFileMarkdown(content, filePath) {
   const regex = /\[([^\]]+)\]\((http[s]?:\/\/[^\)]+)\)/g;
   const links = [];
@@ -30,14 +29,46 @@ function readFileMarkdown(content, filePath) {
 }
 
 
-//CONSTRUIR FUNÇÃO PARA DIRETÓRIO // TESTE 2: OK!
-
+//CONSTRUIR FUNÇÃO PARA DIRETÓRIO // TESTE 2: ALTERAÇAO, NAO PASSA
 function readDirectoryMd(directoryPath) {
   return fs.readdir(directoryPath)
     .then(files => {
       if (files.length === 0) {
-        return "O diretório está vazio";
-        // por que o caminho do diretorio vazio não tá caindo aqui?
+        return Promise.reject(new Error("O diretório está vazio"));
+      }
+
+      const filePromises = files.map(file => {
+        const fullPath = path.join(directoryPath, file);
+        return fs.stat(fullPath)
+          .then(stats => {
+            if (stats.isDirectory()) {
+              return readDirectoryMd(fullPath);
+            } else if (['.md', '.mkd', '.mdwn', '.mdown', '.mdtxt', '.mdtext', '.markdown', '.text'].includes(path.extname(file))) {
+              return fs.readFile(fullPath, 'utf-8')
+                .then(content => {
+                  const links = readFileMarkdown(content);
+                  return {
+                    type: "Este é um arquivo Markdown",
+                    fullPath,
+                    links,
+                  };
+                });
+            } else {
+              return Promise.reject(new Error("Arquivo não é um diretório nem um arquivo Markdown"));
+              //return "Arquivo não é um diretório nem um arquivo Markdown";
+            }
+          });
+      });
+      return Promise.all(filePromises);
+    });
+}
+
+/* function readDirectoryMd(directoryPath) {
+  return fs.readdir(directoryPath)
+    .then(files => {
+      if (files.length === 0) {
+        //console.log('entrei aqui')
+        return Promise.reject(new Error("O diretório está vazio"));
       }
 
       const filePromises = files.map(file => {
@@ -58,11 +89,10 @@ function readDirectoryMd(directoryPath) {
       return Promise.all(filePromises)
         .then(fileLinks => fileLinks.flat());
     });
-}
+} */
 
 
 // CONSTRUIR FUNÇÃO VALIDAR // TESTE 3: OK! 
-
 function validateUniqueLinkFile(link) {
   return axios.head(link.href)
     .then(response => ({
@@ -77,12 +107,11 @@ function validateUniqueLinkFile(link) {
     }));
 }
 
-// FUNÇÃO PARA VALIDAR LINKS // TESTE 4: OK? Não cobre a linha do erro.
+// FUNÇÃO PARA VALIDAR LINKS // TESTE 4: OK!
 function validateMarkdownLinks(links) {
   if (!Array.isArray(links) || links.length === 0) {
     return Promise.reject(new Error("Os links não estão no formato esperado."));
     //return Promise.resolve([]);
-    //DANDO ERRO AQUI. QUANDO TENTA COLOCAR APENAS UM REPOSITORIO VAZIO
   }
   const linkPromises = links.map(link => validateUniqueLinkFile(link));
   return Promise.all(linkPromises)
@@ -93,7 +122,6 @@ function validateMarkdownLinks(links) {
 }
 
 // CONSTRUIR FUNÇÃO MD LINKS // TESTE 5: Em construção. Não cobre linhas do diretorio.
-
 function mdLinks(filePath, validate = false) {
   const absolutePath = path.resolve(filePath);
 
@@ -120,21 +148,21 @@ function mdLinks(filePath, validate = false) {
               return links;
             }
           });
-        } else {
-          throw new Error('O arquivo não é um diretório nem um arquivo Markdown.'); //TESTE NAO COBRIU
-        }
-      })
-      .then(links => {
-        if (validate) {
-          return validateMarkdownLinks(links); //TESTE NAO COBRIU
-        } else {
-          return links;
-        }
-      })
-      .catch(error => {
-        throw new Error(`Erro: ${error.message}`);
-      });
-  }
+      } else {
+        throw new Error('O arquivo não é um diretório nem um arquivo Markdown.'); //TESTE NAO COBRIU
+      }
+    })
+    .then(links => {
+      if (validate) {
+        return validateMarkdownLinks(links); //TESTE NAO COBRIU
+      } else {
+        return links;
+      }
+    })
+    .catch(error => {
+      throw new Error(`Erro: ${error.message}`);
+    });
+}
 
 module.exports = {
   mdLinks, readFileMarkdown, validateMarkdownLinks, validateUniqueLinkFile, readDirectoryMd,

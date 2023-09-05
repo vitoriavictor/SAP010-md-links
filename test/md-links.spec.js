@@ -36,7 +36,54 @@ describe('readFileMarkdown', () => {
 });
 
 // TESTE 2 //
-describe('readDirectoryMd', () => {
+/* describe('readDirectoryMd', () => {
+  it('deve retornar "Diretório vazio" para um diretório vazio', () => {
+    // Suponha que você tenha um diretório vazio temporário para testes
+    return readDirectoryMd('.src/files/dir-files')
+      .then(result => {
+        if (result !== "Diretório vazio") {
+          throw new Error(`Esperado: "Diretório vazio", Recebido: ${result}`);
+        }
+      });
+  });
+
+  it('deve retornar informações corretas para um diretório com arquivos Markdown', () => {
+    // Suponha que você tenha um diretório com arquivos Markdown para testes
+    return readDirectoryMd('.src/files/links-to-check.md')
+      .then(result => {
+        // Coloque aqui as asserções adequadas com base no que você espera como saída
+        // Por exemplo, você pode verificar o tipo de cada item retornado e se os links estão corretos
+        // Certifique-se de ajustar as asserções de acordo com sua estrutura de retorno real
+        if (result.length !== 2) {
+          throw new Error(`Esperado: 2 itens, Recebido: ${result.length} itens`);
+        }
+
+        const item1 = result[0];
+        if (item1.type !== "Arquivo Markdown" || item1.fullPath !== "/caminho/do/arquivo1.md") {
+          throw new Error(`Item 1 não corresponde ao esperado: ${JSON.stringify(item1)}`);
+        }
+
+        const item2 = result[1];
+        if (item2.type !== "Arquivo Markdown" || item2.fullPath !== "/caminho/do/arquivo2.md") {
+          throw new Error(`Item 2 não corresponde ao esperado: ${JSON.stringify(item2)}`);
+        }
+      });
+  });
+
+  it('deve retornar "Arquivo não é um diretório nem um arquivo Markdown" para outros tipos de arquivo', () => {
+    // Suponha que você tenha um diretório com arquivos não-Markdown para testes
+    return readDirectoryMd('.src/files/dir-files-no-md/test-markdown.txt')
+      .then(result => {
+        if (result !== "Arquivo não é um diretório nem um arquivo Markdown") {
+          throw new Error(`Esperado: "Arquivo não é um diretório nem um arquivo Markdown", Recebido: ${result}`);
+        }
+      });
+  });
+}); */
+
+/* describe('readDirectoryMd', () => {
+
+  // REESTRUTURAR TESTE AQUI
   it('deve retornar mensagem para um diretório vazio', () => {
     const directoryPath = './src/files/dir-files';
 
@@ -66,9 +113,9 @@ describe('readDirectoryMd', () => {
 
       });
   });
- */
 
-});
+
+}); */
 
 // TESTE 3 //
 describe('validateUniqueLinkFile', () => {

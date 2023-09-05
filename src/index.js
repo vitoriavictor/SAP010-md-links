@@ -13,7 +13,7 @@ const axios = require("axios"); //módulo para testar links HTTP
   })
   .catch(console.error); */
 
-//CONSTRUIR FUNÇÃO PARA MARKDOWN - ler arquivo e extrair link //
+//CONSTRUIR FUNÇÃO PARA MARKDOWN - ler arquivo e extrair link // TESTE 1: OK!
 
 function readFileMarkdown(content, filePath) {
   const regex = /\[([^\]]+)\]\((http[s]?:\/\/[^\)]+)\)/g;
@@ -30,7 +30,7 @@ function readFileMarkdown(content, filePath) {
 }
 
 
-//CONSTRUIR FUNÇÃO PARA DIRETÓRIO //
+//CONSTRUIR FUNÇÃO PARA DIRETÓRIO // TESTE 2: 
 
 function readDirectoryMd(directoryPath) {
   return fs.readdir(directoryPath)
@@ -59,7 +59,7 @@ function readDirectoryMd(directoryPath) {
 }
 
 
-// CONSTRUIR FUNÇÃO VALIDAR //FAZENDO O TEST, FALTA RODAR. 
+// CONSTRUIR FUNÇÃO VALIDAR // TESTE 3: OK! 
 
 function validateUniqueLinkFile(link) {
   return axios.head(link.href)
@@ -75,7 +75,7 @@ function validateUniqueLinkFile(link) {
     }));
 }
 
-// FUNÇÃO PARA VALIDAR LINKS //
+// FUNÇÃO PARA VALIDAR LINKS // TESTE 4: OK!
 function validateMarkdownLinks(links) {
   if (!Array.isArray(links)) {
     return Promise.reject(new Error("Os links não estão no formato esperado."));
@@ -89,7 +89,7 @@ function validateMarkdownLinks(links) {
     });
 }
 
-// CONSTRUIR FUNÇÃO MD LINKS //
+// CONSTRUIR FUNÇÃO MD LINKS // TESTE 5:
 
 function mdLinks(filePath, validate = false) {
   const absolutePath = path.resolve(filePath);

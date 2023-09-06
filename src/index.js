@@ -115,8 +115,9 @@ function validateMarkdownLinks(links) {
   }
   const linkPromises = links.map(link => validateUniqueLinkFile(link));
   return Promise.all(linkPromises)
-    .then(validatedLinks => validatedLinks)
+    .then(validateUniqueLinkFile => validateUniqueLinkFile)
     .catch(error => {
+      //return Promise.reject(new Error(`Erro ao validar links: ${error.message}`));
       throw new Error(`Erro ao validar links: ${error.message}`); //TESTE NAO COBRIU
     });
 }
@@ -143,7 +144,7 @@ function mdLinks(filePath, validate = false) {
             if (links.length === 0) {
               throw new Error("Ops!! Não há links a serem lidos aqui."); //TESTE NAO COBRIU
             } else if (validate) {
-              return validateMarkdownLinks(links); //TESTE NAO COBRIU
+              return validateMarkdownLinks(links); //TESTE NAO COBRIU  //saiu?
             } else {
               return links;
             }
@@ -154,7 +155,7 @@ function mdLinks(filePath, validate = false) {
     })
     .then(links => {
       if (validate) {
-        return validateMarkdownLinks(links); //TESTE NAO COBRIU
+        return validateMarkdownLinks(links); //TESTE NAO COBRIU   //saiu?
       } else {
         return links;
       }

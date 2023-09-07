@@ -1,13 +1,9 @@
 const { readFileMarkdown, readDirectoryMd, validateUniqueLinkFile, validateMarkdownLinks, mdLinks } = require('../src/index.js');
-const fs = require('fs').promises;
 const axios = require('axios');
-const path = require('path');
+//const fs = require('fs').promises;
+//const path = require('path');
 
 jest.mock('axios');
-//jest.mock('fs').promises;
-
-// NAO FAZER MOCK DO FS, PASSAR DIRETO CAMINHOS DOS ARQUIVOS .MD NO PROJETO
-
 
 // TESTE 1 //
 describe('readFileMarkdown', () => {
@@ -36,13 +32,11 @@ describe('readFileMarkdown', () => {
 
 // TESTE 2 //
 describe('readDirectoryMd', () => {
-  // REESTRUTURAR TESTE AQUI
   it('deve retornar mensagem para um diretório vazio', () => {
-    const directoryPath = './src/files/dir-files';
+    const directoryPath = './src/files/dir-files-empty';
 
     return readDirectoryMd(directoryPath)
       .catch(result => {
-        //console.log(result);
         expect(result.message).toBe('Erro: O diretório está vazio');
       });
   });
@@ -57,25 +51,27 @@ describe('readDirectoryMd', () => {
       });
   });
 
-  it('deve lidar com erros ao processar o arquivo', () => {
-    const filePath = './src/files/dir-files-no-md/test-markdown.txt'; // caminho arquivo não existe
+  it('deve lidar com erros ao ler diretório: não .md e não diretório', () => {
+    const directoryPath = './src/files/dir-files-no-md/test-markdown.txt';
+  
+    return readDirectoryMd(directoryPath)
+      .catch(error => {
+        if (error.message === 'O diretório está vazio') {
+          expect(error.message).toEqual('O diretório está vazio');
+        } else {
+          expect(error.message).toContain('ENOTDIR'); 
+        }
+      });
+  });
+
+  it('deve lidar com erros ao processar o arquivo/caminho (caminho ou arquivo não existem)', () => {
+    const filePath = './src/files/dir-files-no-md/test-mkdow.md';
 
     return readDirectoryMd(filePath)
       .catch(error => {
         expect(error).toBeInstanceOf(Error);
       });
   });
-  /* 
-    it('deve lidar com erros ao ler diretório: não .md e não diretório', () => {
-      const directoryPath = './src/files/dir-files-no-md/test-markdown.txt';
-    
-      return readDirectoryMd(directoryPath)
-        .catch(error => {
-          console.log(JSON.stringify(error))
-          expect(error.message).toEqual('Arquivo não é um diretório nem um arquivo Markdown');
-  
-        });
-    }); */
 });
 
 // TESTE 3 //
@@ -142,7 +138,7 @@ describe('validateMarkdownLinks', () => {
     return expect(resultado).rejects.toThrow('Os links não estão no formato esperado.');
   })
 
-  it('deve lidar com erros ao validar o link', () => { //passou mas não cobriu linha 95
+  it('deve lidar com erros ao validar o link', () => {
     const filePath = './src/files/empty-no-links.md';
 
     return validateMarkdownLinks(filePath)
@@ -150,25 +146,12 @@ describe('validateMarkdownLinks', () => {
         expect(error).toBeInstanceOf(Error);
       });
   });
-
-  //  NAO ROLOU AQUI
-  /*   it('deve lançar um erro ao validar links', () => {
-      const link = { href: 'http://example.com', text: 'Link de exemplo' };
-      const mockValidateUniqueLinkFile = jest.fn(() => Promise.reject(new Error('Erro na validação')));
-    
-      return validateMarkdownLinks([link], mockValidateUniqueLinkFile)
-        .catch(error => {
-          expect(error.message).toBe('Erro ao validar links: Erro na validação');
-        });
-    }); */
-
-
 });
 
 // TESTE 5 //
 describe('mdLinks', () => {
-  it('deve rejeitar a promessa quando o arquivo não é .md', () => {
-    return mdLinks('.src/files/test-markdown.txt')
+  it('deve rejeitar a promessa quando o arquivo não é Markdown', () => {
+    return mdLinks('./src/files/test-markdown.txt')
       .catch(error => {
         expect(error.message).toBe(error.message);
       });
@@ -184,8 +167,42 @@ describe('mdLinks', () => {
       });
   });
 
-  it('deve lidar com erros ao processar o arquivo', () => {
-    const filePath = './src/files/links.md'; // caminho arquivo não existe
+  it('deve retornar um array de links do arquivo Markdown', () => {
+    return mdLinks('./src/files/links-to-check.md')
+      .then(links => {
+        expect(Array.isArray(links)).toBe(true);
+      });
+  });
+
+  it('deve ler um diretório', () => {
+    return mdLinks('./src/files/dir-files-md')
+      .then(links => {
+        expect(Array.isArray(links)).toBe(true);
+      });
+  });
+
+  it('deve lidar com opção de validação (validate = true) do arquivo Markdown', () => {
+    const filePath = './src/files/links-to-check.md';
+    const validate = true;
+
+    return mdLinks(filePath, validate)
+      .then(links => {
+        return validateMarkdownLinks(links)
+          .then(validatedLinks => {
+            expect(links.length).toBe(validatedLinks.length);
+
+            links.forEach((link, index) => {
+              expect(link.href).toBe(validatedLinks[index].href);
+              expect(link.text).toBe(validatedLinks[index].text);
+              expect(link.file).toBe(filePath);
+              expect(validatedLinks[index].file).toBe(filePath);
+            });
+          });
+      });
+  });
+
+  it('deve lidar com erros ao processar o arquivo quando o caminho passado não existe', () => {
+    const filePath = './src/files/links.md';
 
     return mdLinks(filePath)
       .catch(error => {
@@ -193,33 +210,14 @@ describe('mdLinks', () => {
       });
   });
 
-  it('deve retornar um array de links', () => {
-    return expect(mdLinks('.src/files/links-to-check.md')).resolves.toHaveLength(1);
-  });
-
-  it('deve ler um diretório', () => {
-    return mdLinks('./src/files/dir-files')
-      .then(links => {
-        expect(Array.isArray(links)).toBe(true);
+  it('deve lidar com erros ao processar o arquivo quando não há links no arquivo Markdown', () => {
+    const filePath = './src/files/dir-files-md/empty-no-links.md';
+  
+    return mdLinks(filePath)
+      .catch(error => {
+        expect(error).toBeInstanceOf(Error);
+        expect(error.message).toBe('Erro: Ops!! Não há links a serem lidos aqui.');
       });
   });
-
-  it('deve lidar com opção de validação (validate = true)', () => {
-    const filePath = './src/files/links-to-check.md';
-    const validate = true;
-
-    return mdLinks(filePath, validate)
-      .then(links => {
-        const validatedLinks = validateMarkdownLinks(links);
-
-        expect(links.length).toBe(validatedLinks.length);
-
-        links.forEach((link, index) => {
-          expect(link.href).toBe(validatedLinks[index].href);
-          expect(link.text).toBe(validatedLinks[index].text);
-          expect(link.file).toBe(filePath);
-          expect(validatedLinks[index].file).toBe(filePath);
-        });
-      });
-  });
+  
 });

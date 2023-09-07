@@ -1,3 +1,147 @@
+# MD-Links - Readme #
+# 
+**Acesse o projeto:**
+
+[<img alt="WEBSITE" height="50" src="./src/img/readme/icon_link.svg">](www.linknpm.com)
+
+**Tecnologias utilizadas**
+
+<img alt="Figma" height="45" src="https://cdn4.iconfinder.com/data/icons/logos-brands-in-colors/3000/figma-logo-256.png" /><img alt="git" height="40"  src="https://cdn3.iconfinder.com/data/icons/social-media-2169/24/social_media_social_media_logo_git-256.png" /><img alt="github" height="45"  src="https://cdn1.iconfinder.com/data/icons/unicons-line-vol-3/24/github-256.png" /><img alt="HTML" height="50"  src="https://cdn2.iconfinder.com/data/icons/designer-skills/128/code-programming-html-markup-develop-layout-language-512.png"> <img alt="CSS" height="50" src="https://cdn2.iconfinder.com/data/icons/designer-skills/128/code-programming-css-style-develop-layout-language-512.png"> <img alt="JS" height="50" src="https://cdn2.iconfinder.com/data/icons/designer-skills/128/code-programming-javascript-software-develop-command-language-256.png">   
+
+## Índice
+
+* [Resumo do projeto](#resumo-do-projeto)
+* [1 Fluxograma](#1-fluxograma)
+* [2 Guia de instalação e uso](#2-Guia-de-instalação-e-uso)
+* [Testes de Usabilidade](#testes-de-usabilidade)
+* [Objetivos de aprendizagem alcançados](#objetivos-de-aprendizagem-alcançados)
+* [Testes Unitários](#testes-unitários)
+* [Considerações gerais](#considerações-gerais)
+* [Desenvolvedoras](#desenvolvedoras)
+
+***
+
+## Resumo do projeto
+
+[Markdown](https://pt.wikipedia.org/wiki/Markdown) é uma linguagem de marcação
+muito popular entre os programadores. É usada em muitas plataformas que
+manipulam texto (GitHub, fórum, blogs e etc) e é muito comum encontrar arquivos
+com este formato em qualquer repositório (começando pelo tradicional
+`README.md`). Os arquivos `Markdown` normalmente contém _links_ que podem estar
+quebrados, ou que já não são válidos, prejudicando muito o valor da
+informação que está ali.
+
+Para este projeto, tomando esses parâmetros como base, foi criada uma biblioteca para verificar se existem links, e se eles estão válidos ou não, dentro dos arquivos Markdown, além de suas estatísticas.
+
+## 1 Fluxograma 
+
+**Linha de fluxo do programa**
+
+<img src="./src/img/readme/fluxograma md-links (1).png" width="400px">
+
+## 2 Guia de instalação e uso
+
+## 2.1 Instalação
+
+Perfis dos usuários:
+
+Usuário 1: Eu como fã de filmes e séries, gostaria de criar uma conta no App para poder ver o que as pessoas estão curtindo assistir.
+
+## 2.2 Uso
+
+Usuário 2: Como fã de filmes e séries, tendo uma conta válida no App, quero poder ler comentários de outros usuários para poder escolher melhor o filme que irei ou não assistir.
+
+
+## Testes de Usabilidade
+
+Comentários sobre o conteúdo, diagramação e funcionalidades:
+
++ *Acessado por navegador, gostei do uso de cores. Gostei da uniformidade arredondada de toda a rede social. Bem intuitivo. Tive acesso facilmente a informação sem problemas no uso.*
+
++ *Acessado por celular e navegador. Observei que ainda não há uma página de perfil completa, mas o feed está ótimo e é muito divertido ver os comentários. Sugiro uma busca por nome de filme entre os posts em atualizações futuras do aplicativo.*
+
++ *Acessado por celular, a responsividade do feed está ótima. É um app fácil de ser usado e com um tema super legal. Seria bom poder usar tags e hashtags para marcar os temas e poder comentar um post específico. Consegui dar like em tudo que gostei.*
+
+
+## Objetivos de aprendizagem alcançados
+
+- HTML
+    - Uso de HTML semântico
+###
+- CSS
+    - Uso de seletores de CSS
+    - Modelo de caixa (box model): borda, margem, preenchimento
+    - Uso de flexbox em CSS
+    - Uso de CSS Grid Layout
+###
+  - Web APIs
+    - Uso de seletores de DOM
+    - Manipulação de eventos de DOM (listeners, propagação, delegação)
+    - Manipulação dinâmica de DOM
+    - Routing (History API, evento hashchange, window.location)
+###
+  - JavaScript
+    - Arrays (arranjos)
+    - Objetos (key, value)
+    - Diferenciar entre tipos de dados primitivos e não primitivos
+    - Variáveis (declaração, atribuição, escopo)
+    - Uso de condicionais (if-else, switch, operador ternário, lógica booleana)
+    - Uso de laços (while, for, for..of)
+    - Funções (params, args, return)
+    - Testes unitários (unit tests)
+    - Testes assíncronos
+    - Uso de mocks e espiões
+    - Módulos de ECMAScript (ES modules)
+    - Uso de linter (ESLINT)
+    - Uso de identificadores descritivos (Nomenclatura e Semântica)
+    - Diferença entre expressões (expressions) e declarações (statements)
+    - Callbacks
+    - Promessas
+###
+  - Controle de Versões (Git e GitHub)
+
+  - Centrado no usuário
+  
+  - Design de produto
+
+  - Pesquisa
+
+  - Firebase
+
+  - Firestore
+
+## Testes Unitários
+
+**Realização dos Testes**
+
+Foram realizados os testes unitários, com mock do firestore e do firebase.
+
+<img src="./src/img/readme/tests-social-network.png" width="500px">
+
+## Considerações gerais
+
+No projeto da Rede Social, que chamamos de Contraplano, o usuário pode criar uma conta de acesso, logar-se com ela, criar, editar, deletar e dar _likes_ em publicações.
+No desenvolvimento para esse projeto, focamos em [Single-page
+Application
+(SPA)](https://pt.wikipedia.org/wiki/Aplicativo_de_p%C3%A1gina_%C3%BAnica)
+_responsiva_ (com mais de uma tela/página e adaptado para web e mobile) na
+qual é possível ler e escrever dados em forma de posts(comentários). 
+Para configurar a criação de login e autenticação do usuário e base de dados dos posts nós utilizamos o [Firebase](https://firebase.google.com/docs/auth?hl=pt-br) e o [Firestore](https://firebase.google.com/docs/firestore?hl=pt-br).
+Conseguimos implementar as funcionalidades para atender as demandas dos usuários e atingir os objetivos de aprendizagem.
+
+** Projeto entregue através do GitHub
+  [Projeto Rede Social](https://pages.github.com/)
+
+  ** Readme de orientação para projeto
+  [Laboratoria - Social Network](https://github.com/Laboratoria/SAP010-social-network)
+
+## Desenvolvedoras
+
+Projeto desenvolvido por [Larissa Velace](https://github.com/LariVelace/), [Maila Ferreira](https://github.com/MailaFAP)  e [Vitória Victor](https://github.com/vitoriavictor)
+
+###
+###
+
 # Markdown Links
 
 ## Índice
